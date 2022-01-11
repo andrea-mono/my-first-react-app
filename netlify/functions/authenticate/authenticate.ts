@@ -5,6 +5,11 @@ interface UserData {
   password: string;
 }
 
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+}
+
 export const handler: Handler = async (event) => {
   const { email, password }: UserData = JSON.parse(event.body)
 
@@ -17,6 +22,7 @@ export const handler: Handler = async (event) => {
 
   return {
     statusCode: 200,
+    headers,
     body: JSON.stringify({
       username: 'Guest',
       token: 'eyJ1c2VySWQiOjEsImF1dGhvcml6YXRpb24iOiJhZG1pbiJ9',

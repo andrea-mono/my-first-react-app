@@ -83,7 +83,7 @@ const LoginForm: React.FC = () => {
     }
 
     const login = async (data: Object) => {
-        const endpoint: string = 'http://localhost:8888/.netlify/functions/authenticate'
+        const endpoint: string = 'https://kind-lamport-fa2b18.netlify.app/.netlify/functions/authenticate'
         const response = await fetch(endpoint, {
             method: 'POST',
             body: JSON.stringify(data),
