@@ -1,7 +1,7 @@
 .tooltip {
   position: relative;
 
-  &__text {
+  > .tooltip__text {
     visibility: hidden;
     font-size: 0.85rem;
     width: 220px;
@@ -29,7 +29,7 @@
       border-color: #ff5858 transparent transparent transparent;
     }
 
-    &--visible {
+    &.tooltip__text--visible {
       visibility: visible;
       opacity: 1;
     }

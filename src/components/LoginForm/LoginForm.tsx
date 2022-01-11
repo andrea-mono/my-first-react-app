@@ -1,4 +1,7 @@
 import React, {useReducer, useState} from 'react';
+import {useNavigate} from "react-router-dom";
+import {useTypedDispatch, useTypedSelector} from "../../hooks/storeHooks";
+import { setUserToken } from '../../store/auth'
 import classes from './LoginForm.module.scss'
 import Input from "../Input/Input";
 import Button from "../Button/Button";
@@ -43,7 +46,12 @@ const passwordReducer = (state: field, action: actions) => {
     }
 }
 
-const LoginForm: React.FC = props => {
+const LoginForm: React.FC = () => {
+    const navigate = useNavigate()
+
+    const token: string = useTypedSelector((state => state.auth.userToken))
+    const dispatch = useTypedDispatch()
+
     const [email, dispatchEmail] = useReducer(emailReducer, initialFieldState);
     const [password, dispatchPassword] = useReducer(passwordReducer, initialFieldState);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -58,12 +66,34 @@ const LoginForm: React.FC = props => {
         dispatchPassword({ type: 'ON_INPUT', payload: event.target.value })
     }
 
-    const submitHandler = (event: React.FormEvent) => {
+    const submitHandler = async (event: React.FormEvent) => {
         event.preventDefault()
         setIsSubmitted(true)
+
         if (!email.isValid || !password.isValid) return
+
         setIsSubmitted(false)
         reset()
+
+        try {
+            const { token } = await login({ email: email.value, password: password.value })
+            dispatch(setUserToken(token))
+            navigate('/dashboard')
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const login = async (data: Object) => {
+        const endpoint: string = 'http://localhost:8888/.netlify/functions/authenticate'
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        })
+
+        if (!response.ok) throw new Error('ops')
+
+        return await response.json()
     }
 
     const reset = () => {
