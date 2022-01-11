@@ -1,12 +1,15 @@
 import React from 'react';
 import classes from './App.module.scss'
+import LoginForm from "./components/LoginForm/LoginForm";
 
 const App: React.FC = () => {
   return (
-    <div className={classes.login}>
-      <h1 className={classes.login__headline}>Log in</h1>
-      <form className={classes.login__form}>
-      </form>
+    <div className={classes.container}>
+        <div className={classes.headline}>
+          <h1>Sign in</h1>
+          <p>Sign in and start managing your candidates!</p>
+        </div>
+        <LoginForm />
     </div>
   );
 }

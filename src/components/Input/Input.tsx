@@ -1,4 +1,4 @@
-import React, {ChangeEventHandler} from "react";
+import React, { useState } from "react";
 import classes from './Input.module.scss'
 
 interface InputProps {
@@ -6,14 +6,26 @@ interface InputProps {
     label: string;
     type: string;
     value: string;
-    onChange: ChangeEventHandler;
+    onChange: React.ChangeEventHandler;
 }
 
 const Input: React.FC<InputProps> = props => {
+    const [hideLabel, setHideLabel] = useState(false);
+
+    const hideLabelHandler = () => {
+        setHideLabel((prevState: boolean) => !prevState)
+    }
+
     return (
-        <div className={classes.input}>
-            <label htmlFor={props.id}>{props.label}</label>
-            <input type={props.type} value={props.value} onChange={props.onChange} />
+        <div className={classes.field}>
+            {!hideLabel && !props.value && <label htmlFor={props.id}>{props.label}</label>}
+            <input
+                type={props.type}
+                value={props.value}
+                onChange={props.onChange}
+                onFocus={hideLabelHandler}
+                onBlur={hideLabelHandler}
+            />
         </div>
     )
 }
