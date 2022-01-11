@@ -17,6 +17,12 @@ const LoginForm: React.FC = props => {
 
     const submitHandler = (event: React.FormEvent) => {
         event.preventDefault()
+        reset()
+    }
+
+    const reset = () => {
+        setEmail('')
+        setPassword('')
     }
 
     return (
