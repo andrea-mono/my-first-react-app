@@ -8,7 +8,7 @@ interface UserData {
 export const handler: Handler = async (event) => {
   const { email, password }: UserData = JSON.parse(event.body)
 
-  if (email !== 'guest@mono.studio' && password !== '123456') return {
+  if (email !== 'guest@mono.studio' || password !== '123456') return {
     statusCode: 401,
     body: JSON.stringify({
       error: 'The email and password you entered don\'t match.'
