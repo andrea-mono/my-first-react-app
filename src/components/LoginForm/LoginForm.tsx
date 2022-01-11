@@ -48,8 +48,6 @@ const passwordReducer = (state: field, action: actions) => {
 
 const LoginForm: React.FC = () => {
     const navigate = useNavigate()
-
-    const token: string = useTypedSelector((state => state.auth.userToken))
     const dispatch = useTypedDispatch()
 
     const [email, dispatchEmail] = useReducer(emailReducer, initialFieldState);
