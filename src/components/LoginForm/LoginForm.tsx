@@ -74,8 +74,8 @@ const LoginForm: React.FC = () => {
         reset()
 
         try {
-            const { token } = await login({ email: email.value, password: password.value })
-            dispatch(setUserToken(token))
+            const user = await login({ email: email.value, password: password.value })
+            dispatch(setUserToken(user))
             navigate('/dashboard')
         } catch (e) {
             console.log(e)
