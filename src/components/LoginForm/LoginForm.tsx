@@ -1,6 +1,6 @@
 import React, {useReducer, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {useTypedDispatch, useTypedSelector} from "../../hooks/storeHooks";
+import {useTypedDispatch} from "../../hooks/storeHooks";
 import { setUserToken } from '../../store/auth'
 import classes from './LoginForm.module.scss'
 import Input from "../Input/Input";
