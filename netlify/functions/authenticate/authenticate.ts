@@ -11,7 +11,7 @@ const headers = {
 }
 
 export const handler: Handler = async (event) => {
-  const { email, password }: UserData = JSON.parse(event.body)
+  const { email, password }: UserData = JSON.parse(event.body as string)
 
   if (email !== 'guest@mono.studio' || password !== '123456') return {
     statusCode: 401,
