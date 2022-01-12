@@ -1,7 +1,7 @@
 import React, {useReducer, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {useTypedDispatch} from "../../hooks/storeHooks";
-import { setUserToken } from '../../store/auth'
+import {useTypedSelector, useTypedDispatch} from "../../hooks/storeHooks";
+import {login} from '../../store/auth'
 import classes from './LoginForm.module.scss'
 import Input from "../Input/Input";
 import Button from "../Button/Button";
@@ -49,18 +49,22 @@ const passwordReducer = (state: field, action: actions) => {
 const LoginForm: React.FC = () => {
     const navigate = useNavigate()
     const dispatch = useTypedDispatch()
+    const isLoading = useTypedSelector(state => state.auth.isLoading)
 
-    const [email, dispatchEmail] = useReducer(emailReducer, initialFieldState);
-    const [password, dispatchPassword] = useReducer(passwordReducer, initialFieldState);
-    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [email, dispatchEmail] = useReducer(emailReducer, initialFieldState)
+    const [password, dispatchPassword] = useReducer(passwordReducer, initialFieldState)
+    const [isSubmitted, setIsSubmitted] = useState(false)
+    const [signInError, setSignInError] = useState(false)
 
     const emailChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (isSubmitted) setIsSubmitted(false)
+        if (signInError) setSignInError(false)
         dispatchEmail({ type: 'ON_INPUT', payload: event.target.value })
     }
 
     const passwordChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (isSubmitted) setIsSubmitted(false)
+        if (signInError) setSignInError(false)
         dispatchPassword({ type: 'ON_INPUT', payload: event.target.value })
     }
 
@@ -74,24 +78,12 @@ const LoginForm: React.FC = () => {
         reset()
 
         try {
-            const user = await login({ email: email.value, password: password.value })
-            dispatch(setUserToken(user))
+            await dispatch(login({email: email.value, password: password.value}))
             navigate('/dashboard')
         } catch (e) {
-            console.log(e)
+            setSignInError(true)
         }
-    }
 
-    const login = async (data: Object) => {
-        const endpoint: string = 'https://kind-lamport-fa2b18.netlify.app/.netlify/functions/authenticate'
-        const response = await fetch(endpoint, {
-            method: 'POST',
-            body: JSON.stringify(data),
-        })
-
-        if (!response.ok) throw new Error('ops')
-
-        return await response.json()
     }
 
     const reset = () => {
@@ -101,7 +93,10 @@ const LoginForm: React.FC = () => {
 
     return (
         <form className={classes['login-form']} onSubmit={submitHandler}>
-            <Tooltip text="Inserisci una email in un formato valido." isVisible={isSubmitted && !email.isValid}>
+            <Tooltip
+                text={signInError ? 'These credentials don\'t match our records' : 'Please, enter a valid email.'}
+                isVisible={(isSubmitted && !email.isValid) || signInError}
+            >
                 <Input
                     id="email"
                     label="Email"
@@ -110,7 +105,10 @@ const LoginForm: React.FC = () => {
                     onChange={emailChangeHandler}
                 />
             </Tooltip>
-            <Tooltip text="La password deve essere maggiore di 5 caratteri." isVisible={isSubmitted && !password.isValid}>
+            <Tooltip
+                text="Password must have at least 5 characters."
+                isVisible={isSubmitted && !password.isValid}
+            >
                 <Input
                     id="password"
                     label="Password"
@@ -119,7 +117,12 @@ const LoginForm: React.FC = () => {
                     onChange={passwordChangeHandler}
                 />
             </Tooltip>
-            <Button type="submit" label="Login" />
+            <Button
+                type="submit"
+                label="Login"
+                loading={isLoading}
+                disabled={isLoading}
+            />
         </form>
     )
 }
