@@ -22,9 +22,14 @@ const authenticationSlice = createSlice({
             state.token = user.token
             localStorage.setItem('user', JSON.stringify(user))
         },
+        checkExistingUserToken: (state) => {
+            const { username, token } = JSON.parse(<string>localStorage.getItem('user'))
+            state.username = username
+            state.token = token
+        },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload
-        }
+        },
     }
 })
 
@@ -49,6 +54,6 @@ export const login = (credentials: Object) => {
     }
 }
 
-export const { setUserToken, setLoading } = authenticationSlice.actions
+export const { setUserToken, checkExistingUserToken, setLoading } = authenticationSlice.actions
 
 export default authenticationSlice.reducer

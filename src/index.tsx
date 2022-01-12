@@ -6,16 +6,19 @@ import { store } from './store'
 import './index.css';
 import App from './App';
 import Dashboard from "./routes/dashboard";
+import AuthGuard from "./components/AuthGuard/AuthGuard";
 
 ReactDOM.render(
   <React.StrictMode>
       <Provider store={store}>
-          <BrowserRouter>
-              <Routes>
-                  <Route path='/' element={<App />} />
-                  <Route path='/dashboard' element={<Dashboard />} />
-              </Routes>
-          </BrowserRouter>
+          <AuthGuard>
+              <BrowserRouter>
+                  <Routes>
+                      <Route path='/' element={<App />} />
+                      <Route path='/dashboard' element={<Dashboard />} />
+                  </Routes>
+              </BrowserRouter>
+          </AuthGuard>
       </Provider>
   </React.StrictMode>,
   document.getElementById('root')
