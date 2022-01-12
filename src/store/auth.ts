@@ -23,11 +23,11 @@ const authenticationSlice = createSlice({
             localStorage.setItem('user', JSON.stringify(user))
         },
         checkExistingUserToken: (state) => {
-            const user = localStorage.getItem('user')
+            const user: string | null = localStorage.getItem('user')
 
             if (!user) return
 
-            const { username, token } = JSON.parse(<string>user)
+            const { username, token } = JSON.parse(user)
             state.username = username
             state.token = token
         },
