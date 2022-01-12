@@ -7,6 +7,7 @@ interface ButtonProps {
     label: string;
     loading?: boolean;
     disabled?: boolean;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 const Button: React.FC<ButtonProps> = props => (
@@ -14,6 +15,7 @@ const Button: React.FC<ButtonProps> = props => (
         type={props.type || 'button'}
         className={classes.button}
         disabled={props.disabled}
+        onClick={props.onClick}
     >
         {!props.loading && props.label}
         {props.loading && <Spinner />}

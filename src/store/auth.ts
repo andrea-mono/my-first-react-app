@@ -23,9 +23,18 @@ const authenticationSlice = createSlice({
             localStorage.setItem('user', JSON.stringify(user))
         },
         checkExistingUserToken: (state) => {
-            const { username, token } = JSON.parse(<string>localStorage.getItem('user'))
+            const user = localStorage.getItem('user')
+
+            if (!user) return
+
+            const { username, token } = JSON.parse(<string>user)
             state.username = username
             state.token = token
+        },
+        clearToken: (state) => {
+            state.username = ''
+            state.token = ''
+            localStorage.removeItem('user')
         },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload
@@ -54,6 +63,11 @@ export const login = (credentials: Object) => {
     }
 }
 
-export const { setUserToken, checkExistingUserToken, setLoading } = authenticationSlice.actions
+export const {
+    setUserToken,
+    checkExistingUserToken,
+    clearToken,
+    setLoading
+} = authenticationSlice.actions
 
 export default authenticationSlice.reducer
